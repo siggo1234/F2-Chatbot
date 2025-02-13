@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SGAV F2 Chatbot</title>
+    <link rel="icon" type="image/jpg" href="/static/f2_logo.jpg">
+    <style>
+        :root {
+            --primary: #1976D2;
+            --primary-dark: #1565C0;
+            --primary-light: #BBDEFB;
+            --secondary: #f8f9fa;
+            --text: #2C3E50;
+            --border: #E0E0E0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            background-color: white;
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background-color: white;
+            height: 80px;
+        }
+        
+        .logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+        
+        .header h1 {
+            color: var(--text);
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message {
+            margin: 0.5rem auto; /* center all messages */
+            padding: 0.75rem 1rem;
+            line-height: 1.6;
+            max-width: 50%;      /* restrict width for better centering */
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            margin-right: 25%;
+            border-radius: 1rem 0 1rem 1rem;
+        }
+        
+        .assistant-message {
+            background-color: var(--secondary);
+            margin-right: auto;
+            margin-left: 25%;
+            border-radius: 0 1rem 1rem 1rem;
+            color: var(--text);
+        }
+
+        .assistant-message strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .input-container {
+            flex-shrink: 0; /* keep the promptbox static at the bottom */
+            padding: 0 2rem;
+            background-color: white;
+            border-top: 1px solid var(--border);
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 1rem;
+            width: 50%;
+            /*max-width: 800px;*/ /* limit width */
+            margin: 0 auto;   /* center the element */
+            height: 48px;
+        }
+        
+        input[type="text"] {
+            flex-grow: 1;
+            height: 100%;
+            padding: 0 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        button {
+            height: 100%;
+            width: 60px;  /* Fixed width for square-ish button */
+            padding: 0;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        button:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            transform: translateY(0px);
+        }
+        
+        .send-icon {
+            width: 24px;
+            height: 24px;
+            transition: all 0.2s ease;
+        }
+        
+        button:hover .send-icon {
+            transform: scale(1.1);
+        }
+
+        /* Custom scrollbar */
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        /* Markdown styling */
+        .assistant-message p {
+            margin-bottom: 0.5rem;
+        }
+
+        .assistant-message ul, .assistant-message ol {
+            margin: 0.5rem 0;
+            padding-left: 1.25rem;
+        }
+
+        .assistant-message li {
+            margin: 0.25rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <img src="/static/f2_logo.jpg" alt="F2 Logo" class="logo">
+            <h1>SGAV F2 Chatbot</h1>
+        </div>
+        <div class="chat-container" id="chat-container"></div>
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input type="text" id="user-input" placeholder="Hvad kan jeg hjælpe med?">
+                <button onclick="sendMessage()">
+                    <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chatHistory = [];
+        let isTyping = false;
+        
+        function addMessage(content, isUser) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
+            
+            if (isUser) {
+                messageDiv.textContent = content;
+            } else {
+                // Add bold to product names and key terms
+                content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                messageDiv.innerHTML = content;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            
+            if (message && !isTyping) {
+                addMessage(message, true);
+                input.value = '';
+                isTyping = true;
+                
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            history: chatHistory
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.error) {
+                        addMessage('Error: ' + data.error, false);
+                    } else {
+                        addMessage(data.response, false);
+                        chatHistory = data.history;
+                    }
+                } catch (error) {
+                    addMessage('Error: Could not connect to server', false);
+                }
+                
+                isTyping = false;
+            }
+        }
+        
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html> 

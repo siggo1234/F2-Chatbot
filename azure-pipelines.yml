@@ -1,0 +1,38 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.12'
+  displayName: 'Setup Python 3.12'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+# Optionally, add a test step if you have unit tests
+- script: |
+    echo "Running tests..."
+    # e.g., python -m unittest discover
+  displayName: 'Run unit tests'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+  displayName: 'Archive application files'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '<your-service-connection>'
+    appType: 'webAppLinux'
+    appName: '<your-app-service-name>'
+    package: '$(Build.ArtifactStagingDirectory)/app.zip'
+  displayName: 'Deploy to Azure App Service'
