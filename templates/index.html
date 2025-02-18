@@ -61,8 +61,9 @@
         /* New style to ensure logo and title are on the same line */
         .header-left {
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            flex-direction: row;  /* changed from column to row */
+            align-items: center;  /* center items vertically */
+            gap: 0.5rem;
             cursor: pointer;
         }
         
@@ -87,6 +88,50 @@
             color: var(--text);
         }
         
+        /* Info Expander Box styling */
+        .info-expander {
+            position: absolute;
+            top: 90px;              /* aligns below the header */
+            left: 2rem;             /* horizontal margin */
+            width: 280px;
+            max-height: calc(100vh - 90px - 90px);  /* header (80px) + input-container (80px) */
+            overflow-y: auto;       /* scroll when content exceeds */
+            background: white;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            font-family: "Roboto", sans-serif;
+            z-index: 10;            /* ensure it appears above other elements */
+        }
+        .info-header {
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .info-header .expander-icon {
+            color: black;
+        }
+        .info-content {
+            margin-top: 0.5rem;
+            padding: 0.5rem;  /* added extra padding for more margin */
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text);
+        }
+        .info-section {
+            margin-bottom: 1rem; /* added space between sections */
+        }
+        .info-section > strong {
+            display: block;
+            padding-left: 0rem; /* Adjust to align with the ul bullet points */
+            margin-left: 0rem; /* Align headings with bullet points */
+        }
+        
+        .info-section ul {
+            margin-left: 1rem; /* Ensure bullet lists have the same indent */
+        }
+        
         /* Move the absolute centering to the wrapper container */
         .welcome-default-wrapper {
             position: absolute;
@@ -96,7 +141,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.2rem;  /* reduced gap from 1rem */
+            gap: 0.2rem;
         }
         
         .welcome-message {
@@ -105,28 +150,25 @@
             color: var(--text);
         }
         
-        /* Welcome title: all uppercase */
         .welcome-title {
             font-size: 2rem;
             font-weight: bold;
-            /* Use Orbitron for the title: adjust weight as desired */
             font-family: "Roboto", serif;
             font-optical-sizing: auto;
-            font-weight: 500; /* change to 400 or 900 if needed */
+            font-weight: 500;
             font-style: normal;
         }
         
-        /* Welcome subtitle: smaller text */
         .welcome-subtitle {
             font-size: 1rem;
         }
         
-        /* Remove the absolute positioning from the default questions so it flows naturally within the wrapper */
         .default-questions {
             display: flex;
-            gap: 1rem;
+            justify-content: space-between;
+            gap: 0.5rem;
             flex-wrap: nowrap;
-            background-color: white; /* changed from var(--secondary) to white */
+            background-color: white;
             padding: 0 2rem;
             border-radius: 0.5rem;
             width: 100%;
@@ -134,10 +176,12 @@
         }
         
         .default-questions button {
-            flex: 1;
+            flex: 0;
+            width: 180px;
+            min-width: 0;
             background-color: var(--primary-light-2);
             color: var(--text);
-            border: 1px solid black; /* 1px solid black border by default */
+            border: 1px solid black;
             border-radius: 0;
             padding: 1.5rem 0.75rem;
             cursor: pointer;
@@ -155,12 +199,10 @@
         .default-questions button:hover {
             background-color: var(--primary-light-2);
             color: var(--text);
-            /* Keep the physical border at 1px, but add an inset box-shadow to simulate a thicker border */
             border: 1px solid black;
             box-shadow: inset 0 0 0 1px black, 0 4px 8px rgba(0, 0, 0, 0.4);
         }
         
-        /* The rest of your styles remain unchanged */
         .chat-container {
             flex-grow: 1;
             overflow-y: auto;
@@ -170,10 +212,10 @@
         }
         
         .message {
-            margin: 0.5rem auto; /* center all messages */
+            margin: 0.5rem auto;
             padding: 0.75rem 1rem;
             line-height: 1.6;
-            max-width: 50%;      /* restrict width for better centering */
+            max-width: 50%;
             animation: fadeIn 0.3s ease;
         }
         
@@ -185,8 +227,8 @@
         .user-message {
             background: var(--primary-light-2);
             color: black;
-            border: 0px solid black;
-            font-family: "Roboto", sans-serif;  /* New font style for a different look */
+            border: 0;
+            font-family: "Roboto", sans-serif;
             margin-left: auto;
             margin-right: 25%;
             border-radius: 1rem 0 1rem 1rem;
@@ -194,8 +236,8 @@
         
         .assistant-message {
             background-color: var(--secondary);
-            border: 0px solid black;
-            font-family: "Roboto", sans-serif;  /* New font style for a different look */
+            border: 0;
+            font-family: "Roboto", sans-serif;
             margin-right: auto;
             margin-left: 25%;
             border-radius: 0 1rem 1rem 1rem;
@@ -208,7 +250,7 @@
         }
         
         .input-container {
-            flex-shrink: 0; /* keep the promptbox static at the bottom */
+            flex-shrink: 0;
             padding: 0 2rem;
             background-color: white;
             border-top: 1px solid var(--border);
@@ -221,7 +263,7 @@
             display: flex;
             gap: 1rem;
             width: 50%;
-            margin: 0 auto;   /* center the element */
+            margin: 0 auto;
             height: 48px;
         }
         
@@ -242,25 +284,25 @@
         
         button {
             height: 100%;
-            width: 60px;  /* Fixed width for square-ish button */
+            width: 60px;
             padding: 0;
             background-color: var(--primary-light-2);
             color: var(--primary-dark);
-            border: 0px solid var(--primary-dark);
+            border: 0;
             border-radius: 0.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         button:hover {
             background-color: var(--primary);
             color: white;
             transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         button:active {
@@ -311,7 +353,7 @@
 
         /* Responsive welcome image */
         .welcome-img {
-            max-width: 60%;
+            max-width: 40%;
             height: auto;
             margin-bottom: 0.5rem;
         }
@@ -339,11 +381,11 @@
         /* Responsive default question buttons */
         .default-questions button {
             flex: 1; /* All buttons share equal width */
-            background-color: white;
+            background-color: white
             color: var(--text);
             /* Set a fixed border width with transparent color */
             border: 1px solid black;
-            border-radius: 0;
+            border-radius: 0.5rem;
             padding: 1.5rem 0.75rem;
             cursor: pointer;
             font-size: 0.8rem;
@@ -357,7 +399,7 @@
         }
 
         .default-questions button:hover {
-            background-color: white;
+            background-color: white
             color: var(--text);
             border: 1px solid black; /* keep border width constant */
             /* Removed transform so that buttons won't move on hover */
@@ -396,12 +438,58 @@
             </div>
         </div>
         
+        <!-- Info Expander Box -->
+        <div class="info-expander">
+            <div class="info-header" onclick="toggleInfo()">
+                <span>Oversigt over viden</span>
+                <span class="expander-icon">▼</span>
+            </div>
+            <div class="info-content" style="display: none;">
+                <div class="info-section">
+                    <strong>Adgang og rettigheder</strong>
+                    <ul>
+                        <li>Lær om adgangsniveauer, begrænsninger og rettigheder i F2.</li>
+                        <li>Følg retningslinjerne for delegation og valg af standardrolle.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <strong>Dokument- og sagsstyring</strong>
+                    <ul>
+                        <li>Administrér dokumenter med versionering, metadata og vedhæftninger.</li>
+                        <li>Få vejledning i oprettelse, tilknytning og afslutning af sager.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <strong>Kommunikation og posthåndtering</strong>
+                    <ul>
+                        <li>Brug digital post, e-mails og intern kommunikation effektivt.</li>
+                        <li>Følg trinene til korrekt udskrivning og videresendelse af vedhæftede filer.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <strong>Systemopsætning og fejlfinding</strong>
+                    <ul>
+                        <li>Find installations- og geninstallationsvejledninger for F2-klienten.</li>
+                        <li>Lær om logindsamling og fejlfinding.</li>
+                    </ul>
+                </div>
+                <div class="info-section">
+                    <strong>Datahåndtering og integration</strong>
+                    <ul>
+                        <li>Administrér parter og CPR-integration.</li>
+                        <li>Udforsk søgefunktioner og Workzone Client-integration.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Info Expander Box -->
+        
         <!-- Wrapper container for welcome message and default questions -->
         <div class="welcome-default-wrapper">
             <div class="welcome-message">
-                <img src="/static/robot1.jpg" alt="Welcome Image" class="welcome-img">
+                <img src="/static/f2_logo.jpg" alt="Welcome Image" class="welcome-img">
                 <div class="welcome-title">Velkommen!</div>
-                <div class="welcome-subtitle">Jeg er F2 Chatbot - din digitale guide til F2-systemet. Her kan du få svar på alt relateret til F2!</div>
+                <div class="welcome-subtitle">F2 Chatbot er din digitale guide til F2-systemet. Her kan du få svar på alt relateret til F2!</div>
             </div>
             
             <!-- Default questions section -->
@@ -443,7 +531,6 @@
             if (isUser) {
                 messageDiv.textContent = content;
             } else {
-                // Add bold to product names and key terms
                 content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                 messageDiv.innerHTML = content;
             }
@@ -457,7 +544,6 @@
             const message = input.value.trim();
 
             if (message && !isTyping) {
-                // Hide the welcome/default questions wrapper if visible
                 const wrapper = document.querySelector('.welcome-default-wrapper');
                 if (wrapper) {
                     wrapper.style.display = 'none';
@@ -466,6 +552,19 @@
                 addMessage(message, true);
                 input.value = '';
                 isTyping = true;
+                
+                const chatContainer = document.getElementById('chat-container');
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'message assistant-message typing-indicator';
+                let dotCount = 1;
+                typingIndicator.textContent = 'Skriver besked' + '.'.repeat(dotCount);
+                chatContainer.appendChild(typingIndicator);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                const dotInterval = setInterval(() => {
+                    dotCount = (dotCount % 3) + 1;
+                    typingIndicator.textContent = 'Skriver besked' + '.'.repeat(dotCount);
+                }, 500);
                 
                 try {
                     const response = await fetch('/chat', {
@@ -480,6 +579,8 @@
                     });
                     
                     const data = await response.json();
+                    clearInterval(dotInterval);
+                    typingIndicator.remove();
                     if (data.error) {
                         addMessage('Error: ' + data.error, false);
                     } else {
@@ -487,6 +588,8 @@
                         chatHistory = data.history;
                     }
                 } catch (error) {
+                    clearInterval(dotInterval);
+                    typingIndicator.remove();
                     addMessage('Error: Could not connect to server', false);
                 }
                 
@@ -494,15 +597,12 @@
             }
         }
         
-        // Function to automatically send the selected default question and hide the buttons
         function selectQuestion(question) {
             document.getElementById('user-input').value = question;
-
             const wrapper = document.querySelector('.welcome-default-wrapper');
             if (wrapper) {
                 wrapper.style.display = 'none';
             }
-            
             sendMessage();
         }
         
@@ -511,6 +611,19 @@
                 sendMessage();
             }
         });
+
+        // Toggle function for the info expander box
+        function toggleInfo() {
+            const content = document.querySelector('.info-content');
+            const icon = document.querySelector('.expander-icon');
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                icon.textContent = '▲';
+            } else {
+                content.style.display = 'none';
+                icon.textContent = '▼';
+            }
+        }
     </script>
 </body>
 </html>
